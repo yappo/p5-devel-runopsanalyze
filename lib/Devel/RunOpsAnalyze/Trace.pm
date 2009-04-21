@@ -10,13 +10,19 @@ sub new {
     # make file mapping and append sourcecode
     my $map = +{};
     while (my($seq, $stash) = each %{ $trace }) {
-        my $file = $stash->{file};
+        my $file = $stash->{file} || '(null)';
         my $line = $stash->{line};
 
         # file mapping
         $map->{$file} ||= +{};
         $map->{$file}->{$line} ||= +{};
         $map->{$file}->{$line}->{$seq} = $stash;
+
+        if ($file =~ /^\(/) {
+            # not in a file
+            $stash->{sourcecode} = '';
+            next;
+        }
 
         # append sourcecode
         my $file_data = $FILE_CACHE{$file} || do {
