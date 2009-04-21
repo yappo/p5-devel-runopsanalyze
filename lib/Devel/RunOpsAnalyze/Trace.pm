@@ -87,7 +87,7 @@ sub each {
     +{
         steps => $steps,
         usec  => $usec,
-        avrg  => ($usec / $steps),
+        avrg  => $steps ? ($usec / $steps) : 0,
     };
 }
 
