@@ -1,11 +1,11 @@
-This is Perl module Devel::OpProf.
+This is Perl module Devel::RunOpsAnalyze.
 
 INSTALLATION
 
-Devel::OpProf installation is straightforward. If your CPAN shell is set up,
+Devel::RunOpsAnalyze installation is straightforward. If your CPAN shell is set up,
 you should just be able to do
 
-    % cpan Devel::OpProf
+    % cpan Devel::RunOpsAnalyze
 
 Download it, unpack it, then build it as per the usual:
 
@@ -18,9 +18,9 @@ Then install it:
 
 DOCUMENTATION
 
-Devel::OpProf documentation is available as in POD. So you can do:
+Devel::RunOpsAnalyze documentation is available as in POD. So you can do:
 
-    % perldoc Devel::OpProf
+    % perldoc Devel::RunOpsAnalyze
 
 to read the documentation online with your favorite pager.
 
