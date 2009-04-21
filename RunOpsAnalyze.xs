@@ -49,6 +49,7 @@ opcode_capture(OP *o, COP *cop, IV sec) {
         if (CopFILESV(cop)) hv_store(op_stash, "file",    4, newSVpv(SvPV_nolen(CopFILESV(cop)), strlen(SvPV_nolen(CopFILESV(cop)))), 0); 
         hv_store(op_stash, "line",    4, newSVuv((UV) CopLINE(cop)), 0); 
 
+        /* append attribute value */
         switch (o->op_type) {
         case OP_METHOD_NAMED:
         case OP_CONST:
