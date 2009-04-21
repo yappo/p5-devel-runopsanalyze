@@ -50,6 +50,7 @@ opcode_capture(OP *o, COP *cop, IV sec) {
         hv_store(op_stash, "line",    4, newSVuv((UV) CopLINE(cop)), 0); 
 
         switch (o->op_type) {
+        case OP_METHOD_NAMED:
         case OP_CONST:
         case OP_TRANS:
             if (cSVOPo_sv) {
