@@ -44,8 +44,8 @@ opcode_capture(OP *op, COP *cop, IV sec) {
 
         /* takes by COP */
         hv_store(op_stash, "cop_seq", 7, newSViv(cop->cop_seq), 0); 
-        hv_store(op_stash, "package", 7, newSVpv(CopSTASHPV(cop), strlen(CopSTASHPV(cop))), 0); 
-        hv_store(op_stash, "file",    4, CopFILESV(cop), 0); 
+        if (CopSTASHPV(cop)) hv_store(op_stash, "package", 7, newSVpv(CopSTASHPV(cop), strlen(CopSTASHPV(cop))), 0); 
+        if (CopFILESV(cop)) hv_store(op_stash, "file",    4, newSVpv(SvPV_nolen(CopFILESV(cop)), strlen(SvPV_nolen(CopFILESV(cop)))), 0); 
         hv_store(op_stash, "line",    4, newSVuv((UV) CopLINE(cop)), 0); 
 
         hv_store(capture, seq, seq_len, newRV_inc((SV *) op_stash), 0);
