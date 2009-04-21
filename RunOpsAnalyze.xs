@@ -52,7 +52,6 @@ opcode_capture(OP *o, COP *cop, IV sec) {
         switch (o->op_type) {
         case OP_METHOD_NAMED:
         case OP_CONST:
-        case OP_TRANS:
             if (cSVOPo_sv) {
                 hv_store(op_stash, "attribute", 9, newSVsv(cSVOPo_sv), 0); 
             }
