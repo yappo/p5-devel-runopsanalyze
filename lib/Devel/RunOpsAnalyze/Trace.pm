@@ -18,7 +18,7 @@ sub new {
             $line = $before->{line};
         }
 
-        if ($stash->{attribute}) {
+        if (defined $stash->{attribute}) {
             $stash->{attribute} =~ s{\\}{\\\\};
             $stash->{attribute} =~ s{\n}{\\n};
             $stash->{attribute} =~ s{\r}{\\r};
@@ -140,7 +140,7 @@ sub as_string {
                 ($stash->{class} . "($seq)"),
                 $stash->{name}, $stash->{desc};
         }
-        if ($stash->{attribute}) {
+        if (defined $stash->{attribute}) {
             my $value;
             if ($self->use_term_ansicolor) {
                 $value = $self->color('bold magenta', $stash->{attribute});
