@@ -20,7 +20,7 @@ sub new {
 
         # append sourcecode
         my $file_data = $FILE_CACHE{$file} || do {
-            open my $fh, '<', $file or die $!;
+            open my $fh, '<', $file or die "$file: $!";
             my @lines = map { my $line = $_; $line =~ s/\n$//; $line } <$fh>;
             unshift @lines, undef;
             \@lines;
