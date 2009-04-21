@@ -42,7 +42,7 @@ sub analyze (&) { ## no critic
     for my $seq (sort { $a <=> $b } keys %{ $trace }) {
         my $stash = $trace->{$seq};
 
-        if ($stash->{before_op_seq} && $trace->{$stash->{before_op_seq}}->{package} eq __PACKAGE__) {
+        if ($stash->{before_op_seq} && $trace->{$stash->{before_op_seq}} && $trace->{$stash->{before_op_seq}}->{package} eq __PACKAGE__) {
             # delete first steps
             next;
         }
