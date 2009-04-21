@@ -18,6 +18,13 @@ sub new {
             $line = $before->{line};
         }
 
+        if ($stash->{attribute}) {
+            $stash->{attribute} =~ s{\\}{\\\\};
+            $stash->{attribute} =~ s{\n}{\\n};
+            $stash->{attribute} =~ s{\r}{\\r};
+            $stash->{attribute} =~ s{\t}{\\t};
+        }
+
         # file mapping
         $map->{$file} ||= +{};
         $map->{$file}->{$line} ||= +{};
@@ -128,12 +135,22 @@ sub as_string {
             $text .= join( ', ', $class,
                 $self->color('magenta', $stash->{name}),
                 $self->color('cyan', $stash->{desc}));
-            $text .= "\n";
         } else {
-            $text .= sprintf "\t%s, %s, %s\n",
+            $text .= sprintf "\t%s, %s, %s",
                 ($stash->{class} . "($seq)"),
                 $stash->{name}, $stash->{desc};
         }
+        if ($stash->{attribute}) {
+            my $value;
+            if ($self->use_term_ansicolor) {
+                $value = $self->color('bold magenta', $stash->{attribute});
+            } else {
+                $value = $stash->{attribute};
+            }
+            $text .= "\t[$value]";
+        }
+        $text .= "\n";
+
         $text .= sprintf "\t% 10s steps, % 10s usec, (avrg: %s usec)\n",
             $stash->{steps},
             $stash->{usec}, ($stash->{usec} / $stash->{steps});

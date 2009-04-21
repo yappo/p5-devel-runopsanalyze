@@ -20,12 +20,12 @@ HV *capture;
  * capture of running opes status
  */
 void
-opcode_capture(OP *op, COP *cop, IV sec) {
+opcode_capture(OP *o, COP *cop, IV sec) {
     HV *op_stash;
     char seq[64];
     I32 seq_len;
 
-    seq_len = sprintf(seq, "%d", op->op_seq);
+    seq_len = sprintf(seq, "%d", o->op_seq);
 
     /* fetch the op stash */
     if (hv_exists(capture, seq, seq_len)) {
@@ -39,7 +39,7 @@ opcode_capture(OP *op, COP *cop, IV sec) {
     } else {
         /* create new entry */
         op_stash = newHV();
-        hv_store(op_stash, "type",  4, newSViv(op->op_type), 0); 
+        hv_store(op_stash, "type",  4, newSViv(o->op_type), 0); 
         hv_store(op_stash, "steps", 5, newSViv(0), 0);
         hv_store(op_stash, "usec",  4, newSViv(0), 0);
 
@@ -48,6 +48,16 @@ opcode_capture(OP *op, COP *cop, IV sec) {
         if (CopSTASHPV(cop)) hv_store(op_stash, "package", 7, newSVpv(CopSTASHPV(cop), strlen(CopSTASHPV(cop))), 0); 
         if (CopFILESV(cop)) hv_store(op_stash, "file",    4, newSVpv(SvPV_nolen(CopFILESV(cop)), strlen(SvPV_nolen(CopFILESV(cop)))), 0); 
         hv_store(op_stash, "line",    4, newSVuv((UV) CopLINE(cop)), 0); 
+
+        switch (o->op_type) {
+        case OP_AELEMFAST:
+        case OP_CONST:
+        case OP_TRANS:
+            if (cSVOPo_sv) {
+                hv_store(op_stash, "attribute", 9, newSVsv(cSVOPo_sv), 0); 
+            }
+            break;
+        }
 
         hv_store(capture, seq, seq_len, newRV_inc((SV *) op_stash), 0);
     }
@@ -69,7 +79,7 @@ opcode_capture(OP *op, COP *cop, IV sec) {
         hv_store(op_stash, "before_op_seq", 13, newSViv((IV) before_op_seq), 0);
     }
 
-    before_op_seq = op->op_seq;
+    before_op_seq = o->op_seq;
 }
 
 /*
