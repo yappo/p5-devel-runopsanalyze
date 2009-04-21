@@ -10,8 +10,13 @@ sub new {
     # make file mapping and append sourcecode
     my $map = +{};
     while (my($seq, $stash) = each %{ $trace }) {
-        my $file = $stash->{file} || '(null)';
+        my $file = $stash->{file};
         my $line = $stash->{line};
+        if (!defined $file && $stash->{before_op_seq}) {
+            my $before = $trace->{$stash->{before_op_seq}};
+            $file = $before->{file};
+            $line = $before->{line};
+        }
 
         # file mapping
         $map->{$file} ||= +{};

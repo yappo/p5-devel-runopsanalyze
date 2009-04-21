@@ -83,8 +83,9 @@ analyzer_runops(pTHX)
     IV sec;
     struct rusage rusage1, rusage2;
     OP *op;
-    COP *cop;
+    COP *cop, *last_cop;
 
+    last_cop = NULL;
     while (1) {
 
         if (is_runnning) {
@@ -105,6 +106,21 @@ analyzer_runops(pTHX)
             if (status) {
                 break;
             }
+
+            if (!CopFILESV(cop) && last_cop != NULL) {
+                /* use last cop / missing filename */
+                cop = last_cop;
+            } else {
+                last_cop = cop;
+                if (PL_curcop->op_seq == op->op_seq) {
+                    /* use current cop / curcop mismatch*/
+                    cop = PL_curcop;
+                } else if (cop->op_seq == 0) {
+                    /* use current cop / not seq mismatch */
+                    cop = PL_curcop;
+                }
+            }
+
             opcode_capture(op, cop, sec);
         } else {
             if (!(PL_op = CALL_FPTR(PL_op->op_ppaddr)(aTHX))) {
