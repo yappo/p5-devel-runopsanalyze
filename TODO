@@ -4,3 +4,5 @@ TODO
 * padsv, padav, padhv, gssv
 * exit function taken bus error
 * as_html
+* die catch
+* signals
